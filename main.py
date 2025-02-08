@@ -9,14 +9,14 @@ app = FastAPI()
 
 # 入力するデータ型の定義
 class statement(BaseModel):
-    bps: float  # BPS (1株あたり純資産)  
-    long_term_loans: float  # 長期借入金  
-    dividend_payout_ratio: float  # 配当性向  
-    revenue: float  # 売上高  
-    roe: float  # ROE (自己資本利益率)  
-    investing_cf: float  # 投資CF
-    operating_cf_margin: float  # 営業CFマージン  
-    financing_cf: float  # 財務CF 
+    bps: Optional[float] = None  # BPS (1株あたり純資産)  
+    long_term_loans: Optional[float] = None  # 長期借入金  
+    dividend_payout_ratio: Optional[float] = None  # 配当性向  
+    revenue: Optional[float] = None  # 売上高  
+    roe: Optional[float] = None  # ROE (自己資本利益率)  
+    investing_cf: Optional[float] = None  # 投資CF
+    operating_cf_margin: Optional[float] = None  # 営業CFマージン  
+    financing_cf: Optional[float] = None  # 財務CF 
     shareholders_equity: Optional[float] = None  # 株主資本  
     retained_earnings: Optional[float] = None  # 利益剰余金  
     cash_equivalents: Optional[float] = None  # 現金同等物  

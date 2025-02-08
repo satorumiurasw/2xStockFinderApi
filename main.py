@@ -58,6 +58,6 @@ async def make_predictions(features: statement):
         features.roe,
         features.dividend_payout_ratio,
     ]
-    predict = model.predict([x])[0]
-    proba = model.predict_proba([x])[0][1] * 100
-    return({'predict': float(predict), 'proba': round(float(proba), 2)})
+    y = model.predict([x])[0]
+    y_proba = model.predict_proba([x])[0]
+    return({'predict': float(y), 'proba': float(y_proba[y])})

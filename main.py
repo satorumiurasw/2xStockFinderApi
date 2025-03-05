@@ -15,39 +15,27 @@ app = FastAPI()
 
 # 入力するデータ型の定義
 class statement(BaseModel):
-    # long_term_loans: Optional[float] = None  # 長期借入金  
-    # bps: Optional[float] = None  # BPS (1株あたり純資産)  
-    # investing_cf: Optional[float] = None  # 投資CF
-    # financing_cf: Optional[float] = None  # 財務CF
-    # operating_cf_margin: Optional[float] = None  # 営業CFマージン
-    # revenue: Optional[float] = None  # 売上高  
-    # # roe: Optional[float] = None  # ROE (自己資本利益率) = 純利益 / 株主資本 * 100
-    # net_income: Optional[float] = None  # 純利益  
-    # shareholders_equity: Optional[float] = None  # 株主資本  
-    # dividend_payout_ratio: Optional[float] = None  # 配当性向
-    # stock_price: Optional[float] = None  # 株価
-    # sector: Optional[str] = None  # 業種
-    long_term_loans: Optional[float] = np.nan  # 長期借入金  
-    bps: Optional[float] = np.nan  # BPS (1株あたり純資産)  
-    investing_cf: Optional[float] = np.nan  # 投資CF
-    financing_cf: Optional[float] = np.nan  # 財務CF
-    operating_cf_margin: Optional[float] = np.nan  # 営業CFマージン
-    revenue: Optional[float] = np.nan  # 売上高  
-    # roe: Optional[float] = np.nan  # ROE (自己資本利益率) = 純利益 / 株主資本 * 100
-    net_income: Optional[float] = np.nan  # 純利益  
-    shareholders_equity: Optional[float] = np.nan  # 株主資本  
-    dividend_payout_ratio: Optional[float] = np.nan  # 配当性向
-    stock_price: Optional[float] = np.nan  # 株価
-    sector: Optional[str] = np.nan  # 業種
+    long_term_loans: Optional[float] = None  # 長期借入金  
+    bps: Optional[float] = None  # BPS (1株あたり純資産)  
+    investing_cf: Optional[float] = None  # 投資CF
+    financing_cf: Optional[float] = None  # 財務CF
+    operating_cf_margin: Optional[float] = None  # 営業CFマージン
+    revenue: Optional[float] = None  # 売上高  
+    # roe: Optional[float] = None  # ROE (自己資本利益率) = 純利益 / 株主資本 * 100
+    net_income: Optional[float] = None  # 純利益  
+    shareholders_equity: Optional[float] = None  # 株主資本  
+    dividend_payout_ratio: Optional[float] = None  # 配当性向
+    stock_price: Optional[float] = None  # 株価
+    sector: Optional[str] = None  # 業種
 
-    # @field_validator(
-    #     "long_term_loans", "bps", "investing_cf", "financing_cf", 
-    #     "operating_cf_margin", "revenue", "net_income", 
-    #     "shareholders_equity", "dividend_payout_ratio", "stock_price",
-    #     mode="before"
-    # )
-    # def none_to_nan(cls, v):
-    #     return np.nan if v is None else v
+    @field_validator(
+        "long_term_loans", "bps", "investing_cf", "financing_cf", 
+        "operating_cf_margin", "revenue", "net_income", 
+        "shareholders_equity", "dividend_payout_ratio", "stock_price",
+        mode="before"
+    )
+    def none_to_nan(cls, v):
+        return np.nan if v is None else v
     
 # 学習済みのモデルの読み込み
 model = pickle.load(open('model6.pkl', 'rb'))
@@ -63,7 +51,9 @@ async def index():
 # POST が送信された時（入力）と予測値（出力）の定義
 @app.post('/make_predictions')
 async def make_predictions(features: statement):
-    roe = (features.net_income / features.shareholders_equity) * 100
+    roe = np.nan
+    if features.shareholders_equity != np.nan:
+        roe = (features.net_income / features.shareholders_equity) * 100
     x = pd.DataFrame([[
         features.long_term_loans,
         features.bps,
